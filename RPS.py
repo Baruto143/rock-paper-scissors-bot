@@ -1,28 +1,28 @@
 import random
 
-def player(prev_play):
-    """
-    This function defines the core strategy of your RPS program.
+def detect_pattern(opponent_history):
+    if len(opponent_history) >= 3:
+        last_three = opponent_history[-3:]
+        if last_three[0] == last_three[1] == last_three[2]:
+            return last_three[0]  # The opponent is repeating the same move
+    return None
 
-    Args:
-        prev_play (str): The opponent's previous move ("R", "P", or "S").
-                         If it's the first game, prev_play will be an empty string.
+def counter_move(move):
+    if move == "R":
+        return "P"  # Paper beats Rock
+    elif move == "P":
+        return "S"  # Scissors beats Paper
+    elif move == "S":
+        return "R"  # Rock beats Scissors
+    return random.choice(["R", "P", "S"])  # Random move if no pattern detected
 
-    Returns:
-        str: Your next move ("R", "P", or "S").
-    """
-
-    # Simple strategy: Cycle through moves
-    if prev_play == "":
-        return "R"  # Start with Rock
-    elif prev_play == "R":
-        return "P"
-    elif prev_play == "P":
-        return "S"
-    else:
-        return "R"
-
-    # You can implement more sophisticated strategies here, 
-    # such as:
-    # - Tracking opponent's move frequencies
-    # - Using machine learning models
+def player(prev_play, opponent_history=[]):
+    if prev_play:
+        opponent_history.append(prev_play)
+    
+    predicted_move = detect_pattern(opponent_history)
+    
+    if predicted_move:
+        return counter_move(predicted_move)
+    
+    return random.choice(["R", "P", "S"])  # Random move if no pattern detected
