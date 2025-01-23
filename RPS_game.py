@@ -24,11 +24,17 @@ def round_winner(player1_move, player2_move):
 def play(player1, player2, num_games, verbose=False):
     player1_score = 0
     player2_score = 0
+    player1_history = []  # Initialize history for player 1
+    player2_history = []  # Initialize history for player 2
     
     for _ in range(num_games):
         # Get moves from both players
-        player1_move = player1("", []) if _ == 0 else player1(player2_move, player1_history)
-        player2_move = player2("", []) if _ == 0 else player2(player1_move, player2_history)
+        player1_move = player1("", player1_history) if _ == 0 else player1(player2_move, player1_history)
+        player2_move = player2("", player2_history) if _ == 0 else player2(player1_move, player2_history)
+        
+        # Append the moves to each player's history
+        player1_history.append(player1_move)
+        player2_history.append(player2_move)
         
         # Determine the winner of the round
         winner = round_winner(player1_move, player2_move)
@@ -53,4 +59,3 @@ def play(player1, player2, num_games, verbose=False):
 
 # Sample call to play the game (for testing)
 # play(player, quincy, 1000, verbose=True)
-
